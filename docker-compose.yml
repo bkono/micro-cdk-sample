@@ -1,0 +1,73 @@
+version: '3'
+
+networks:
+  example:
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.20.0.0/16
+
+services:
+  consul:
+    image: consul:1.4.4
+    networks:
+      example:
+        ipv4_address: 172.20.0.2
+    environment: 
+      CONSUL_ALLOW_PRIVILEGED_PORTS: ""
+    ports:
+      - "8300:8300"
+      - "8301:8301"
+      - "8301:8301/udp"
+      - "8302:8302"
+      - "8302:8302/udp"
+      - "8400:8400"
+      - "8500:8500"
+      - "8600:53"
+      - "8600:53/udp"
+      - "53:53"
+      - "53:53/udp"
+    command: ['agent', '-dev', '-ui', '-bootstrap', 
+              '-bind=0.0.0.0', '-client=0.0.0.0', '-dns-port=53']
+  greeter:
+    build: ./greeter-srv
+    networks:
+      - example
+    dns: 172.20.0.1
+    depends_on:
+      - consul
+      - vip
+    command: ['-registry', 'consul', '-registry_address', 'consul.service.consul']
+
+  vip:
+    build: ./vip-srv
+    networks:
+      - example
+    dns: 172.20.0.1
+    depends_on:
+      - consul
+    command: ['-registry', 'consul', '-registry_address', 'consul.service.consul']
+
+  api:
+    build: ./api
+    networks:
+      - example
+    dns: 172.20.0.1
+    depends_on:
+      - consul
+    command: ['-registry', 'consul', '-registry_address', 'consul.service.consul']
+
+  microapi:
+    image: microhq/micro
+    networks:
+      - example
+    dns: 172.20.0.1
+    depends_on:
+      - consul
+      - api
+      - greeter
+      - vip
+    ports:
+      - "8090:8090"
+    command: ['-registry=consul', '-registry_address=consul.service.consul',
+              'api', '-handler=api', '-address=0.0.0.0:8090']

@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package go.micro.srv.vip;
+
+service VIP {
+    rpc CheckName (CheckNameRequest) returns (CheckNameResponse) {}
+}
+
+message CheckNameRequest {
+	string name = 1;
+}
+
+message CheckNameResponse {
+	bool is_vip = 1;
+}
