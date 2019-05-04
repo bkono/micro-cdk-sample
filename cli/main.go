@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 
+	_ "github.com/bkono/micro-plugins/registry/cloudmap"
 	"github.com/micro/go-micro/client"
 	"github.com/micro/go-micro/cmd"
 	"github.com/micro/go-micro/metadata"

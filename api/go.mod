@@ -5,6 +5,7 @@ go 1.12
 require (
 	github.com/99designs/gqlgen v0.7.2 // indirect
 	github.com/bkono/micro-cdk-sample/greeter-srv/proto/hello v0.0.0-00010101000000-000000000000
+	github.com/bkono/micro-plugins v0.1.4
 	github.com/emicklei/go-restful v2.8.1+incompatible
 	github.com/golang/protobuf v1.3.1
 	github.com/micro/examples v0.1.0

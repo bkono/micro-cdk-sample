@@ -58,7 +58,8 @@ services:
     command: ['-registry', 'consul', '-registry_address', 'consul.service.consul']
 
   microapi:
-    image: microhq/micro
+    # image: microhq/micro
+    build: ./microapi
     networks:
       - example
     dns: 172.20.0.1
@@ -67,7 +68,10 @@ services:
       - api
       - greeter
       - vip
+    environment:
+      MICRO_REGISTRY: consul
+      MICRO_REGISTRY_ADDRESS: consul.service.consul
+      MICRO_API_HANDLER: api
+      MICRO_API_ADDRESS: 0.0.0.0:8090
     ports:
       - "8090:8090"
-    command: ['-registry=consul', '-registry_address=consul.service.consul',
-              'api', '-handler=api', '-address=0.0.0.0:8090']

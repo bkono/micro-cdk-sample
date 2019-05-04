@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	hello "github.com/bkono/micro-cdk-sample/greeter-srv/proto/hello"
+	_ "github.com/bkono/micro-plugins/registry/cloudmap"
 	"github.com/micro/go-micro"
 	"github.com/micro/go-micro/errors"
 	api "github.com/micro/micro/api/proto"
@@ -19,7 +20,6 @@ type Say struct {
 
 func (s *Say) Hello(ctx context.Context, req *api.Request, rsp *api.Response) error {
 	log.Print("Received Say.Hello API request")
-
 	name, ok := req.Get["name"]
 	if !ok || len(name.Values) == 0 {
 		return errors.BadRequest("go.micro.api.greeter", "Name cannot be blank")
