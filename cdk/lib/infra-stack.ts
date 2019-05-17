@@ -4,6 +4,8 @@ import elbv2 = require('@aws-cdk/aws-elasticloadbalancingv2');
 import ecs = require('@aws-cdk/aws-ecs');
 // import sd = require('@aws-cdk/aws-servicediscovery');
 import iam = require('@aws-cdk/aws-iam');
+import { EcrImage, ContainerDefinition } from '@aws-cdk/aws-ecs';
+import { Task } from '@aws-cdk/aws-stepfunctions';
 
 export class SrvStack extends cdk.Construct {
   public readonly service: ecs.FargateService;
@@ -126,6 +128,25 @@ export class InfraStack extends cdk.Stack {
     new cdk.CfnOutput(this, 'ClusterARN', { value: this.cluster.clusterArn });
   }
 }
+
+// create an EcrImage
+
+// PipelineTemplate {
+//   Params: take an ECR image, take a fargate taskarn, cluster arn
+//   create a codepipeline
+//   GithubSource Stage
+//   Build Stage: push to the EcrImage (buildspec.yml)
+//   Deploy Stage: deploy to a fargate task
+// }
+
+// FargateServiceTemplate {
+//   take an ECR EcrImage
+//   create the Task
+//   create the ContainerDefinition
+//   create service
+// }
+// }
+
 
 interface SrvStackProps {
   cluster: ecs.Cluster
