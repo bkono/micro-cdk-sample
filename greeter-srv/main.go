@@ -3,10 +3,12 @@ package main
 import (
 	"fmt"
 	"log"
+	"math/rand"
 	"time"
 
 	hello "github.com/bkono/micro-cdk-sample/greeter-srv/proto/hello"
 	vip "github.com/bkono/micro-cdk-sample/vip-srv/proto/vip"
+	_ "github.com/bkono/micro-plugins/registry/cloudmap"
 	"github.com/micro/go-micro"
 
 	"golang.org/x/net/context"
@@ -51,10 +53,20 @@ func main() {
 	service.Init()
 
 	// Setup clients
+
 	cl := vip.NewVIPService("go.micro.srv.vip", service.Client())
 
 	// Register Handlers
 	hello.RegisterSayHandler(service.Server(), NewSayHandler(cl))
+
+	go func() {
+		for {
+			viprsp, err := cl.CheckName(context.Background(), &vip.CheckNameRequest{Name: "goroutine-name"})
+			log.Println("vip.CheckName called", viprsp, err)
+
+			time.Sleep(time.Duration(rand.Intn(30)) * time.Second)
+		}
+	}()
 
 	// Run server
 	if err := service.Run(); err != nil {

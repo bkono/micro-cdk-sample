@@ -13,6 +13,8 @@ RUN go build -mod=vendor -v -o srv .
 # final stage
 FROM alpine:3.2
 
+RUN apk --no-cache add --update ca-certificates
+
 WORKDIR /app
 COPY --from=build-env /go/src/myapp/srv srv
 ENTRYPOINT [ "/app/srv" ]

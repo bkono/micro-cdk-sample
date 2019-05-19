@@ -13,6 +13,8 @@ RUN go build -mod=vendor -v -o api .
 # final stage
 FROM alpine:3.2
 
+RUN apk --no-cache add --update ca-certificates
+
 WORKDIR /app
 COPY --from=build-env /go/src/myapp/api api
 ENTRYPOINT [ "/app/api" ]

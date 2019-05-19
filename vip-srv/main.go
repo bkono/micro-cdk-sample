@@ -4,6 +4,7 @@ import (
 	pb "github.com/bkono/micro-cdk-sample/vip-srv/proto/vip"
 
 	"github.com/bkono/micro-cdk-sample/vip-srv/handler"
+	_ "github.com/bkono/micro-plugins/registry/cloudmap"
 	"github.com/micro/go-log"
 	"github.com/micro/go-micro"
 )
